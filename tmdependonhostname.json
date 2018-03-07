@@ -1,0 +1,53 @@
+   {
+            "type": "Microsoft.Network/trafficmanagerprofiles",
+            "name": "[variables('trafficManagerNameMfs')]",
+            "apiVersion": "2015-11-01",
+            "location": "global",
+            "tags": {
+                "displayName": "[variables('trafficManagerNameMfs')]",
+                "environment": "[parameters('environment')]",
+                "region": "global",
+                "resourceGroup": "[resourceGroup().name]"
+            },
+            "properties": {
+                "profileStatus": "Enabled",
+                "trafficRoutingMethod": "Priority",
+                "dnsConfig": {
+                    "relativeName": "[toLower(variables('trafficManagerNameMfs'))]",
+                    "fqdn": "[concat(toLower(variables('trafficManagerNameMfs')),'.trafficmanager.net')]",
+                    "ttl": 30
+                },
+                "monitorConfig": {
+                    "protocol": "HTTPS",
+                    "port": 443,
+                    "path": "/Content/favicons/favicon.ico"
+                },
+                "endpoints": [
+                    {
+                        "name": "[toUpper(variables('webAppNameMfsPrimary'))]",
+                        "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+                        "properties": {
+                            "targetResourceId": "[resourceId('Microsoft.Web/sites', variables('webAppNameMfsPrimary'))]",
+                            "target": "[concat(toLower(variables('webAppNameMfsPrimary')),'.azurewebsites.net')]",
+                            "endpointStatus": "Enabled",
+                            "priority": 20
+                        }
+                    },
+                    {
+                        "name": "[toUpper(variables('webAppNameMfsSecondary'))]",
+                        "type": "Microsoft.Network/trafficManagerProfiles/azureEndpoints",
+                        "properties": {
+                            "targetResourceId": "[resourceId('Microsoft.Web/sites', variables('webAppNameMfsSecondary'))]",
+                            "target": "[concat(toLower(variables('webAppNameMfsSecondary')),'.azurewebsites.net')]",
+                            "endpointStatus": "Enabled",
+                            "priority": 30
+                        }
+                    }
+                ]
+            },
+          "dependsOn": [
+            "[concat('Microsoft.Web/sites/', variables('webAppNameMfsSecondary'))]",
+            "[concat('Microsoft.Web/sites/', variables('webAppNameMfsSecondary'), '/hostnameBindings/',variables('environmentSettings')[parameters('environment')].webAppHostNameMfs)]"
+
+          ]
+        },
