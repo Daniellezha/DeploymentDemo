@@ -1,0 +1,24 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "uniqueDnsName": {
+      "value": "GEN-UNIQUE"
+    },
+    "environment": {
+      "value": "DAN"
+    },
+    "primaryRegion": {
+      "value": "southeastasia"
+    },
+    "secondaryRegion": {
+      "value": "eastasia"
+    },
+    "appServicePlanFrontEndSkuSecondary": {
+      "value": "S1"
+    },
+    "serviceMfs": {
+      "value": "MFS"
+    }
+  }
+}
