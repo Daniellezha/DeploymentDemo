@@ -1,0 +1,30 @@
+{
+            "type": "Microsoft.Web/sites/hostnameBindings",
+            "name": "[concat(variables('webAppNameMfsSecondary'), '/', variables('environmentSettings')[parameters('environment')].webAppHostNameMfs)]",
+            "apiVersion": "2016-08-01",
+            "location": "[parameters('secondaryRegion')]",
+            "tags": {
+                "displayName": "[variables('environmentSettings')[parameters('environment')].webAppHostNameMfs]",
+                "environment": "[parameters('environment')]",
+                "region": "[variables('regionAbbreviation')[parameters('secondaryRegion')]]",
+                "resourceGroup": "[resourceGroup().name]"
+            },
+            "properties": {
+                "sslState": "SniEnabled",
+                "siteName": "[variables('webAppNameMfsSecondary')]",
+                "thumbprint": "[reference(resourceId('Microsoft.Web/certificates', variables('certificateNameWildcard'))).Thumbprint]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Web/certificates/',variables('certificateNameWildcard'))]",
+                "[concat('Microsoft.Web/sites/',variables('webAppNameMfsSecondary'))]",
+                "[concat('Microsoft.Web/sites/',variables('webAppNameMfsApiSecondary'))]",
+                "[concat('Microsoft.Web/sites/',variables('webAppNameCdApiSecondary'))]",
+                "[concat('Microsoft.Web/sites/',variables('webAppNameIamApiSecondary'))]",
+                "[concat('Microsoft.Web/sites/',variables('webAppNameMdApiSecondary'))]",
+                "[concat('Microsoft.Web/sites/',variables('webAppNameMdMgmtApiSecondary'))]",
+                "[concat('Microsoft.Web/sites/',variables('webAppNameMdPblcApiSecondary'))]",
+                "[concat('Microsoft.Network/trafficmanagerprofiles/', variables('trafficManagerNameMfs'))]",  Remove this line
+                "[concat('Microsoft.Sql/servers/', variables('sqlServerNamePrimary'), '/failoverGroups/', variables('sqlServerFailoverGroupMfs'))]",
+                "[concat('Microsoft.Sql/servers/', variables('sqlServerNameIamPrimary'), '/failoverGroups/', variables('sqlServerFailoverGroupIam'))]"
+            ]
+        },
